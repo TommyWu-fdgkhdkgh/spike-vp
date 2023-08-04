@@ -8,11 +8,17 @@ system::system(const sc_core::sc_module_name& nm):
     vcml::system(nm),
     nrcpu("nrcpu", 1),
     mem("mem", vcml::range(SPIKEVP_MEM_ADDR, SPIKEVP_MEM_END)),
+    mrom("mrom", vcml::range(SPIKEVP_MROM_ADDR, SPIKEVP_MROM_END)),
+    plic("plic", vcml::range(SPIKEVP_PLIC_ADDR, SPIKEVP_PLIC_END)),
+    clint("clint", vcml::range(SPIKEVP_CLINT_ADDR, SPIKEVP_CLINT_END)),
     m_cpus(nrcpu),
     m_clock("clock", SPIKEVP_CPU_DEFCLK),
     m_reset("reset"),
     m_bus("bus"),
-    m_mem("mem", mem.get().length()) {
+    m_mem("mem", mem.get().length()),
+    m_mrom("mrom", mrom.get().length()),
+    m_plic("plic"),
+    m_clint("clint") {
 
     /* 
      * default cfg 
@@ -44,6 +50,9 @@ system::system(const sc_core::sc_module_name& nm):
         m_bus.bind(now_cpu->data);
     }
     m_bus.bind(m_mem.in, mem);
+    m_bus.bind(m_mrom.in, mrom);
+    m_bus.bind(m_plic.in, plic);
+    m_bus.bind(m_clint.in, clint);
 
     // clock
     for (auto cpu : m_cpus) {
@@ -51,6 +60,9 @@ system::system(const sc_core::sc_module_name& nm):
     }
     m_clock.clk.bind(m_bus.clk);
     m_clock.clk.bind(m_mem.clk);
+    m_clock.clk.bind(m_mrom.clk);
+    m_clock.clk.bind(m_plic.clk);
+    m_clock.clk.bind(m_clint.clk);
 
     // reset
     for (auto cpu : m_cpus) {
@@ -58,6 +70,9 @@ system::system(const sc_core::sc_module_name& nm):
     }
     m_reset.rst.bind(m_bus.rst);
     m_reset.rst.bind(m_mem.rst);
+    m_reset.rst.bind(m_mrom.rst);
+    m_reset.rst.bind(m_plic.rst);
+    m_reset.rst.bind(m_clint.rst);
 }
 
 system::~system() {

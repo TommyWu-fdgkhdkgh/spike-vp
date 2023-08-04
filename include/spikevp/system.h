@@ -11,6 +11,9 @@ class system : public vcml::system
 public:
     vcml::property<unsigned int> nrcpu;
     vcml::property<vcml::range> mem;
+    vcml::property<vcml::range> mrom;
+    vcml::property<vcml::range> plic;
+    vcml::property<vcml::range> clint;
 
     system() = delete;
     system(const sc_core::sc_module_name& name);
@@ -32,6 +35,9 @@ private:
     vcml::generic::reset m_reset;
     vcml::generic::bus m_bus;
     vcml::generic::memory m_mem;
+    vcml::generic::memory m_mrom;
+    vcml::riscv::plic m_plic;
+    vcml::riscv::clint m_clint;
 };
 
 } // spikevp
