@@ -11,6 +11,7 @@ system::system(const sc_core::sc_module_name& nm):
     mrom("mrom", vcml::range(SPIKEVP_MROM_ADDR, SPIKEVP_MROM_END)),
     plic("plic", vcml::range(SPIKEVP_PLIC_ADDR, SPIKEVP_PLIC_END)),
     clint("clint", vcml::range(SPIKEVP_CLINT_ADDR, SPIKEVP_CLINT_END)),
+    uart("uart", vcml::range(SPIKEVP_UART_ADDR, SPIKEVP_UART_END)),
     m_cpus(nrcpu),
     m_clock("clock", SPIKEVP_CPU_DEFCLK),
     m_reset("reset"),
@@ -18,7 +19,9 @@ system::system(const sc_core::sc_module_name& nm):
     m_mem("mem", mem.get().length()),
     m_mrom("mrom", mrom.get().length()),
     m_plic("plic"),
-    m_clint("clint") {
+    m_clint("clint"),
+    m_uart("uart"),
+    m_term("term") {
 
     /* 
      * default cfg 
@@ -38,6 +41,8 @@ system::system(const sc_core::sc_module_name& nm):
               /*default_real_time_clint=*/false,
               /*default_trigger_count=*/4);
 
+    m_uart.set_big_endian();
+
     for (unsigned int cpu_id = 0; cpu_id < nrcpu; cpu_id++) {
         std::stringstream ss;
         ss << "cpu" << cpu_id;
@@ -53,6 +58,21 @@ system::system(const sc_core::sc_module_name& nm):
     m_bus.bind(m_mrom.in, mrom);
     m_bus.bind(m_plic.in, plic);
     m_bus.bind(m_clint.in, clint);
+    m_bus.bind(m_uart.in, uart);
+
+    // IRQ mapping
+    unsigned int hartid_base = 0;
+    for (unsigned int cpu_id = 0; cpu_id < nrcpu; cpu_id++) {
+        /*
+        m_cpus[cpu_id]->irq[SPIKEVP_IRQ_M_EXT].bind(m_plic.irqt[cpu_id - hartid_base + nrcpu]);
+        m_cpus[cpu_id]->irq[SPIKEVP_IRQ_S_EXT].bind(m_plic.irqt[cpu_id - hartid_base]);
+        */
+        m_cpus[cpu_id]->irq[SPIKEVP_IRQ_M_EXT].bind(m_plic.irqt[cpu_id - hartid_base]);
+        m_cpus[cpu_id]->irq[SPIKEVP_IRQ_S_EXT].bind(m_plic.irqt[cpu_id - hartid_base + nrcpu]);
+        m_cpus[cpu_id]->irq[SPIKEVP_IRQ_M_SOFT].bind(m_clint.irq_sw[cpu_id]);
+        m_cpus[cpu_id]->irq[SPIKEVP_IRQ_M_TIMER].bind(m_clint.irq_timer[cpu_id]);
+    }
+    m_plic.irqs[SPIKEVP_UART_IRQ].bind(m_uart.irq);
 
     // clock
     for (auto cpu : m_cpus) {
@@ -63,6 +83,7 @@ system::system(const sc_core::sc_module_name& nm):
     m_clock.clk.bind(m_mrom.clk);
     m_clock.clk.bind(m_plic.clk);
     m_clock.clk.bind(m_clint.clk);
+    m_clock.clk.bind(m_uart.clk);
 
     // reset
     for (auto cpu : m_cpus) {
@@ -73,6 +94,17 @@ system::system(const sc_core::sc_module_name& nm):
     m_reset.rst.bind(m_mrom.rst);
     m_reset.rst.bind(m_plic.rst);
     m_reset.rst.bind(m_clint.rst);
+    m_reset.rst.bind(m_uart.rst);
+
+    // Serial connections
+    m_uart.serial_tx.bind(m_term.serial_rx);
+    m_term.serial_tx.bind(m_uart.serial_rx);
+
+    // workaround pointers
+    // spike need this ;(
+    for (cpu* now_cpu : m_cpus) {
+        now_cpu->m_clint = &m_clint;
+    }
 }
 
 system::~system() {
@@ -106,4 +138,4 @@ void system::end_of_elaboration() {
     vcml::log_debug("%s", ss.str().c_str());
 }
 
-} // namespace or1kmvp
+} // namespace spikevp

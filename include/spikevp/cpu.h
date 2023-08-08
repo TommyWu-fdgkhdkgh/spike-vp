@@ -30,20 +30,15 @@ private:
     std::ostream sout_; // used for socket and terminal interface
     static const size_t INTERLEAVE = 5000;
 public:
+    // TODO : workaround
+    // TODO : add an interface for clint like timer
+    vcml::riscv::clint *m_clint;
+
     /*
     vcml::property<bool> enable_decode_cache;
     vcml::property<bool> enable_sleep_mode;
     vcml::property<bool> enable_insn_dmi;
     vcml::property<bool> enable_data_dmi;
-
-    vcml::property<unsigned int> irq_ompic;
-    vcml::property<unsigned int> irq_uart0;
-    vcml::property<unsigned int> irq_uart1;
-    vcml::property<unsigned int> irq_ethoc;
-    vcml::property<unsigned int> irq_ocfbc;
-    vcml::property<unsigned int> irq_ockbd;
-    vcml::property<unsigned int> irq_ocspi;
-    vcml::property<unsigned int> irq_sdhci;
 
     vcml::property<std::string> insn_trace_file;
 
@@ -80,7 +75,9 @@ public:
     /* simif_t */
     // should return NULL for MMIO addresses
     virtual char* addr_to_mem(reg_t paddr) override;
-    virtual bool reservable(reg_t paddr) override { return addr_to_mem(paddr); }
+    //virtual bool reservable(reg_t paddr) override { return addr_to_mem(paddr); }
+    // TODO : it's workaround, need to be implemented in the future.
+    virtual bool reservable(reg_t paddr) override { return true; }
     // used for MMIO addresses
     virtual bool mmio_fetch(reg_t paddr, size_t len, uint8_t* bytes) override;
     virtual bool mmio_load(reg_t paddr, size_t len, uint8_t* bytes) override;

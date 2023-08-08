@@ -82,13 +82,25 @@ void cpu::set_core_id(vcml::u64 id) {
 
 vcml::u64 cpu::cycle_count() const {
     vcml::u64 ret = spike_core->get_num_cycles();
+
+    // TODO : try to workaround to get out of the infinite loop
+    // in arch/riscv/lib/delay.c/_delay    
+    spike_core->get_state()->time->sync(m_clint->get_cycles());
+
     return ret;
 }
 
 /* vcml::processor protect */
 // TODO
 void cpu::interrupt(size_t irq, bool set) {
-    assert(0);
+    // Send this IRQ to spike.
+    if (irq == SPIKEVP_IRQ_M_TIMER) {
+        if (!m_clint) {
+            assert(0);
+        }
+        spike_core->get_state()->time->sync(m_clint->get_cycles());
+    }
+    spike_core->get_state()->mip->backdoor_write_with_mask(1 << irq, set ? 1 << irq : 0);
 }
 
 void cpu::simulate(size_t cycles) {
@@ -154,7 +166,7 @@ bool cpu::mmio_fetch(reg_t paddr, size_t len, uint8_t* bytes) {
     tlm::tlm_response_status rs;
     vcml::tlm_initiator_socket& port = insn;
 
-    sc_core::sc_time now = local_time_stamp();
+    // sc_core::sc_time now = local_time_stamp();
 
     unsigned int nbytes = 0;
     rs = port.read(paddr, bytes, len, info, &nbytes);
@@ -177,7 +189,7 @@ bool cpu::mmio_load(reg_t paddr, size_t len, uint8_t* bytes) {
     tlm::tlm_response_status rs;
     vcml::tlm_initiator_socket& port = data;
 
-    sc_core::sc_time now = local_time_stamp();
+    // sc_core::sc_time now = local_time_stamp();
 
     unsigned int nbytes = 0;
     rs = port.read(paddr, bytes, len, info, &nbytes);
@@ -200,7 +212,7 @@ bool cpu::mmio_store(reg_t paddr, size_t len, const uint8_t* bytes) {
     tlm::tlm_response_status rs;
     vcml::tlm_initiator_socket& port = data;
 
-    sc_core::sc_time now = local_time_stamp();
+    // sc_core::sc_time now = local_time_stamp();
 
     unsigned int nbytes = 0;
     rs = port.write(paddr, bytes, len, info, &nbytes);

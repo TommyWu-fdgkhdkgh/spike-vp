@@ -14,6 +14,7 @@ public:
     vcml::property<vcml::range> mrom;
     vcml::property<vcml::range> plic;
     vcml::property<vcml::range> clint;
+    vcml::property<vcml::range> uart;
 
     system() = delete;
     system(const sc_core::sc_module_name& name);
@@ -38,6 +39,8 @@ private:
     vcml::generic::memory m_mrom;
     vcml::riscv::plic m_plic;
     vcml::riscv::clint m_clint;
+    vcml::serial::uart8250 m_uart;
+    vcml::serial::terminal m_term;
 };
 
 } // spikevp
