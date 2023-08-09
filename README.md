@@ -70,3 +70,10 @@ make
 ```
 ./spike-vp -f ./config/up-fw-jump.cfg
 ```
+
+# Updates
+
+2023/8/9
+Take 25 minutes to boot the linux kernel.
+
+
