@@ -74,6 +74,5 @@ make
 # Updates
 
 2023/8/9
+
 Take 25 minutes to boot the linux kernel.
-
-
