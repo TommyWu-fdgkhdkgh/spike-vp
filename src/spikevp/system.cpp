@@ -63,10 +63,6 @@ system::system(const sc_core::sc_module_name& nm):
     // IRQ mapping
     unsigned int hartid_base = 0;
     for (unsigned int cpu_id = 0; cpu_id < nrcpu; cpu_id++) {
-        /*
-        m_cpus[cpu_id]->irq[SPIKEVP_IRQ_M_EXT].bind(m_plic.irqt[cpu_id - hartid_base + nrcpu]);
-        m_cpus[cpu_id]->irq[SPIKEVP_IRQ_S_EXT].bind(m_plic.irqt[cpu_id - hartid_base]);
-        */
         m_cpus[cpu_id]->irq[SPIKEVP_IRQ_M_EXT].bind(m_plic.irqt[cpu_id - hartid_base]);
         m_cpus[cpu_id]->irq[SPIKEVP_IRQ_S_EXT].bind(m_plic.irqt[cpu_id - hartid_base + nrcpu]);
         m_cpus[cpu_id]->irq[SPIKEVP_IRQ_M_SOFT].bind(m_clint.irq_sw[cpu_id]);

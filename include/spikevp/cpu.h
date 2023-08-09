@@ -34,18 +34,6 @@ public:
     // TODO : add an interface for clint like timer
     vcml::riscv::clint *m_clint;
 
-    /*
-    vcml::property<bool> enable_decode_cache;
-    vcml::property<bool> enable_sleep_mode;
-    vcml::property<bool> enable_insn_dmi;
-    vcml::property<bool> enable_data_dmi;
-
-    vcml::property<std::string> insn_trace_file;
-
-    vcml::u64 insn_count() const { return m_iss->get_num_instructions(); }
-    void log_timing_info() const;
-
-    */
     cpu(const sc_core::sc_module_name& nm,
         unsigned int coreid,
         const cfg_t *cfg);
