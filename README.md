@@ -57,3 +57,16 @@ cd build
 make -j6
 make install
 ```
+
+# compile spike-vp
+
+```
+make clean 
+make
+```
+
+# run spike-vp
+
+```
+./spike-vp -f ./config/up-fw-jump.cfg
+```
