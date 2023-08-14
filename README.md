@@ -73,6 +73,12 @@ make
 
 # Updates
 
+2023/8/14
+
+If the memory simulation support DMI, it takes 1 minutes to boot the linux kernel.
+
+---
+
 2023/8/9
 
 Take 25 minutes to boot the linux kernel.
