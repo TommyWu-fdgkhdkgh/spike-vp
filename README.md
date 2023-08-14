@@ -75,7 +75,7 @@ make
 
 2023/8/14
 
-If the memory simulation support DMI, it takes 1 minutes to boot the linux kernel.
+If the memory simulation support DMI, it takes 1 minute to boot the linux kernel.
 
 ---
 
