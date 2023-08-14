@@ -11,7 +11,9 @@ cpu::cpu(const sc_core::sc_module_name& nm,
     isa(cfg->isa(), cfg->priv()),
     cfg(cfg),
     log_file(nullptr),
-    sout_(nullptr) {
+    sout_(nullptr),
+    enable_insn_dmi("enable_insn_dmi", allow_dmi),
+    enable_data_dmi("enable_data_dmi", allow_dmi) {
 
     // TODO
     // log_file_t log_file(nullptr); 
@@ -155,6 +157,19 @@ bool cpu::remove_watchpoint(const vcml::range& mem,
 /* spike::simif_t */
 // should return NULL for MMIO addresses
 char* cpu::addr_to_mem(reg_t paddr) {
+    // TODO : Make the dmi support look better.
+    tlm::tlm_dmi dmi;
+    if (enable_insn_dmi && enable_data_dmi) {
+        if (data.dmi_cache().lookup(paddr, 1,
+                                    tlm::TLM_READ_COMMAND, dmi)) {
+            return (char *)(dmi.get_dmi_ptr() + (paddr - dmi.get_start_address()));
+        }
+        if (insn.dmi_cache().lookup(paddr, 1,
+                                    tlm::TLM_READ_COMMAND, dmi)) {
+            return (char *)(dmi.get_dmi_ptr() + (paddr - dmi.get_start_address()));
+        }
+    }
+
     // Now we don't support the DMI,
     // so we always return NULL.
     return NULL;
@@ -182,6 +197,7 @@ bool cpu::mmio_fetch(reg_t paddr, size_t len, uint8_t* bytes) {
 
     // dmi handling
     // TODO
+    //
 }
 
 bool cpu::mmio_load(reg_t paddr, size_t len, uint8_t* bytes) {

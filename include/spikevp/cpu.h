@@ -30,6 +30,9 @@ private:
     std::ostream sout_; // used for socket and terminal interface
     static const size_t INTERLEAVE = 5000;
 public:
+    vcml::property<bool> enable_insn_dmi;
+    vcml::property<bool> enable_data_dmi;
+
     // TODO : workaround
     // TODO : add an interface for clint like timer
     vcml::riscv::clint *m_clint;
