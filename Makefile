@@ -6,11 +6,11 @@ CXX ?= g++
 
 CXXFLAGS ?= -g -std=c++17 
 
-INCLUDE ?= -Iinclude -Iinstall-systemc-2.3.3/include -Iinstall-vcml/include -Iinstall-riscv-isa-sim/include
+INCLUDE ?= -Iinclude -I$(SYSTEMC_HOME)/include -I$(VCML_HOME)/include -I$(SPIKE_HOME)/include
 
 SRC_FILES = ./src/main.cpp ./src/spikevp/system.cpp ./src/spikevp/cpu.cpp
 
-ARCHIVES = install-vcml/lib/libvcmld.a install-vcml/lib/libmwrd.a install-systemc-2.3.3/lib-linux64/libsystemc.a install-riscv-isa-sim/lib/libriscv.a install-riscv-isa-sim/lib/libsoftfloat.a install-riscv-isa-sim/lib/libdisasm.a 
+ARCHIVES = $(VCML_HOME)/lib/libvcmld.a $(VCML_HOME)/lib/libmwrd.a $(SYSTEMC_HOME)/lib-linux64/libsystemc.a $(SPIKE_HOME)/lib/libriscv.a $(SPIKE_HOME)/lib/libsoftfloat.a $(SPIKE_HOME)/lib/libdisasm.a 
 
 LIBS ?= -lpthread -lelf -lstdc++fs -ldl -lrt 
 
