@@ -38,10 +38,10 @@ cpu::cpu(const sc_core::sc_module_name& nm,
     // note : fdgk workaround
     icache_sim_t *ic = NULL;
     dcache_sim_t *dc = NULL;
-    if (icache_config.size()) {
+    if (icache_config.get().size()) {
         ic = new icache_sim_t(icache_config.get().c_str());
     }
-    if (dcache_config.size()) {
+    if (dcache_config.get().size()) {
         dc = new dcache_sim_t(dcache_config.get().c_str());
     }
 
