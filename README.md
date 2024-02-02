@@ -1,5 +1,7 @@
 # spike-vp
 
+A proof of concept virtual platform that use Spike as the ISS, and use VCML as the SystemC library.
+
 # install dependencies
 
 ## SystemC
