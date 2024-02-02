@@ -75,6 +75,13 @@ make
 
 # Updates
 
+2024/2/3
+
+Add Spike L1DCache and L1ICache simulation.
+Add a config for running the dhrystone, the dhrystone binary is from the chipyard project.
+
+---
+
 2023/8/14
 
 If the memory simulation support DMI, it takes 1 minute to boot the linux kernel.
