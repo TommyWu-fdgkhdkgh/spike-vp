@@ -30,6 +30,7 @@ private:
     std::ostream sout_; // used for socket and terminal interface
     static const size_t INTERLEAVE = 5000;
 public:
+    vcml::property<uint64_t> reset_vec;
     vcml::property<bool> enable_insn_dmi;
     vcml::property<bool> enable_data_dmi;
 

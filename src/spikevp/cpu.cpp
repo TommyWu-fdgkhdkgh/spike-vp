@@ -12,6 +12,7 @@ cpu::cpu(const sc_core::sc_module_name& nm,
     cfg(cfg),
     log_file(nullptr),
     sout_(nullptr),
+    reset_vec("reset_vec", SPIKEVP_RESETVEC),
     enable_insn_dmi("enable_insn_dmi", allow_dmi),
     enable_data_dmi("enable_data_dmi", allow_dmi) {
 
@@ -22,7 +23,7 @@ cpu::cpu(const sc_core::sc_module_name& nm,
 
     spike_core = new processor_t(&isa, cfg, this, id, false,
                                  log_file.get(), sout_);
-    spike_core->set_state_pc(SPIKEVP_RESETVEC);
+    spike_core->set_state_pc(reset_vec);
 }
 
 cpu::~cpu() {
