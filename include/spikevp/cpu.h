@@ -8,6 +8,7 @@
 #include "riscv/isa_parser.h"
 #include "riscv/cfg.h"
 #include "riscv/simif.h"
+#include "riscv/cachesim.h"
 // fix function name conflic between spike and vcml
 #undef get_field
 #undef set_field
@@ -33,6 +34,14 @@ public:
     vcml::property<uint64_t> reset_vec;
     vcml::property<bool> enable_insn_dmi;
     vcml::property<bool> enable_data_dmi;
+    vcml::property<std::string> icache_config; 
+    vcml::property<std::string> dcache_config;
+    vcml::property<bool> enable_simple_pc_trace;
+    vcml::property<uint64_t> simple_pc_mod;
+    vcml::property<bool> enable_icache_log;
+    vcml::property<bool> enable_dcache_log;
+    vcml::property<uint64_t> cache_blocksz;
+    vcml::property<uint64_t> max_cycles;
 
     // TODO : workaround
     // TODO : add an interface for clint like timer

@@ -14,7 +14,15 @@ cpu::cpu(const sc_core::sc_module_name& nm,
     sout_(nullptr),
     reset_vec("reset_vec", SPIKEVP_RESETVEC),
     enable_insn_dmi("enable_insn_dmi", allow_dmi),
-    enable_data_dmi("enable_data_dmi", allow_dmi) {
+    enable_data_dmi("enable_data_dmi", allow_dmi),
+    icache_config("icache_config", ""),
+    dcache_config("dcache_config", ""),
+    enable_simple_pc_trace("enable_simple_pc_trace", false),
+    simple_pc_mod("simple_pc_mod", 1),
+    enable_icache_log("enable_icache_log", false),
+    enable_dcache_log("enable_dcache_log", false),
+    cache_blocksz("cache_blocksz", 64),
+    max_cycles("max_cycles", 0) {
 
     // TODO
     // log_file_t log_file(nullptr); 
@@ -24,6 +32,27 @@ cpu::cpu(const sc_core::sc_module_name& nm,
     spike_core = new processor_t(&isa, cfg, this, id, false,
                                  log_file.get(), sout_);
     spike_core->set_state_pc(reset_vec);
+    spike_core->set_enable_simple_pc_trace(enable_simple_pc_trace);
+    spike_core->set_simple_pc_mod(simple_pc_mod);
+
+    // note : fdgk workaround
+    icache_sim_t *ic = NULL;
+    dcache_sim_t *dc = NULL;
+    if (icache_config.size()) {
+        ic = new icache_sim_t(icache_config.get().c_str());
+    }
+    if (dcache_config.size()) {
+        dc = new dcache_sim_t(dcache_config.get().c_str());
+    }
+
+    if (ic) ic->set_log(enable_icache_log);
+    if (dc) dc->set_log(enable_dcache_log);
+
+    if (ic) spike_core->register_memtracer(ic);
+    if (dc) spike_core->register_memtracer(dc);
+
+    spike_core->set_cache_blocksz(cache_blocksz);
+    spike_core->set_max_cycles(max_cycles);
 }
 
 cpu::~cpu() {
