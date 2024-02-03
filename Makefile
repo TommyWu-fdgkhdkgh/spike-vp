@@ -6,9 +6,9 @@ CXX ?= g++
 
 CXXFLAGS ?= -g -std=c++17 
 
-INCLUDE ?= -Iinclude -I$(SYSTEMC_HOME)/include -I$(VCML_HOME)/include -I$(SPIKE_HOME)/include
+INCLUDE ?= -I./spikevp/include -I$(SYSTEMC_HOME)/include -I$(VCML_HOME)/include -I$(SPIKE_HOME)/include
 
-SRC_FILES = ./src/main.cpp ./src/spikevp/system.cpp ./src/spikevp/cpu.cpp
+SRC_FILES = ./spikevp/src/main.cpp ./spikevp/src/spikevp/system.cpp ./spikevp/src/spikevp/cpu.cpp
 
 ARCHIVES = $(VCML_HOME)/lib/libvcmld.a $(VCML_HOME)/lib/libmwrd.a $(SYSTEMC_HOME)/lib-linux64/libsystemc.a $(SPIKE_HOME)/lib/libriscv.a $(SPIKE_HOME)/lib/libsoftfloat.a $(SPIKE_HOME)/lib/libdisasm.a 
 
