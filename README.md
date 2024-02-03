@@ -75,6 +75,14 @@ make
 
 # Updates
 
+2024/2/4
+
+Optimize the memory access strategy of Spike for non-dmi access.
+With this optimization, it takes 160 seconds to boot the linux kernel.
+It's nine times faster than the original memory access strategy.
+
+---
+
 2024/2/3
 
 Add Spike L1DCache and L1ICache simulation.
@@ -90,4 +98,5 @@ If the memory simulation support DMI, it takes 1 minute to boot the linux kernel
 
 2023/8/9
 
-Take 25 minutes to boot the linux kernel.
+If we don't use dmi,
+it takes 25 minutes to boot the linux kernel.
