@@ -122,9 +122,19 @@ int system::run() {
              duration == 0.0 ? 0.0 : realtime / duration);
 
     vcml::u64 ninsn = 0;
+    for (auto cpu : m_cpus) {
+        ninsn += cpu->insn_count();
+    }
 
     log_info("sim speed          %.1f MIPS",
              realtime == 0.0 ? 0.0 : ninsn / realtime / 1e6);
+
+    // get per cpu informations
+    /*
+    for (auto cpu : mcpus) {
+        cpu->get_info();
+    }
+     */
 
     return result;
 }

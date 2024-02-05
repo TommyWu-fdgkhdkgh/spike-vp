@@ -51,9 +51,11 @@ public:
         unsigned int coreid,
         const cfg_t *cfg);
 
-    /* vcml::processor */
     ~cpu();
 
+    uint64_t insn_count();
+
+    /* vcml::processor */
     virtual void reset() override;
 
     virtual const char* version() const override;

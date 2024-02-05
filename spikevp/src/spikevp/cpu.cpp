@@ -58,6 +58,10 @@ cpu::cpu(const sc_core::sc_module_name& nm,
 cpu::~cpu() {
 }
 
+uint64_t cpu::insn_count() {
+    return spike_core->get_state()->minstret->read();
+}
+
 /* vcml::processor public */
 void cpu::reset() {
     // assert(0);
